@@ -42,7 +42,7 @@ export class World {
     _tickEntities(delta) {
         for (let entity of this.entities) {
             if (entity.tick != null) {
-                entity.tick(delta);
+                entity.tick(0.016);
             }
 
             if (entity.facing != null && entity.mesh != null && entity.isStatic != true) {

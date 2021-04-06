@@ -8,7 +8,7 @@ export class Pheromone {
         this.facing = facing.clone();
         this.facing.normalize();
         this.includeInGrid = true;
-        this.age = 10.0 + Math.random();
+        this.age = 20.0 + Math.random();
         this.isStatic = true;
     }
 

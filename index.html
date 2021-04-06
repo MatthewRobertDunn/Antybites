@@ -33,7 +33,9 @@
 			void main() {
 				float j = sin(texcoord.x * 3.14);
 				float k = sin(texcoord.y * 3.14);
-				gl_FragColor = vec4(vInstanceColor, j * k * 0.2 );
+				float a = j * k;
+				gl_FragColor = vec4(vInstanceColor, a * 0.4  );
+
 			}
 		</script>
 

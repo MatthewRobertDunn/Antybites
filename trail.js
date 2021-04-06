@@ -3,7 +3,7 @@ const uniforms = {
     time: { type: "f", value: 0.0 },
 };
 
-const geometry = new THREE.PlaneGeometry(0.5, 4, 1);
+const geometry = new THREE.PlaneGeometry(2, 2, 1);
 //const material = new THREE.MeshBasicMaterial({ color: 0xaaaa00 });
 
 const material = new THREE.ShaderMaterial({
@@ -18,7 +18,7 @@ const material = new THREE.ShaderMaterial({
 //Class of trailLength pheromones rendered using a single instanced mesh
 export class Trail {
     constructor(world) {
-        this.trailLength = 40;
+        this.trailLength = 80;
         this.count = 0;
         this.dummy = new THREE.Object3D();  //use a dummy object to calculate the world transform matrix
         this.dummy.updateMatrix();

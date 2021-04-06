@@ -39,6 +39,7 @@ export class Ant {
         let pheromones = this.world.grid.getInRange(sensorSpot, 2.0);
         if (pheromones.length > 0) {
             let p = pheromones[Math.floor(Math.random() * pheromones.length)];
+            //this.facing = p.position.clone().add(p.facing).sub(this.position).normalize();
             this.facing = p.position.clone().sub(this.position).normalize();
         }
 
