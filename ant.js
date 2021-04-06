@@ -1,5 +1,6 @@
 import { loadGtlf } from './loader.js'
-import { Pheromone } from './pheromone.js';
+//import { Pheromone } from './pheromone.js';
+import {Trail} from './trail.js';
 
 const zero = new THREE.Vector2(0, 0);
 export class Ant {
@@ -9,6 +10,8 @@ export class Ant {
         this.facing = facing;
         this.facing.normalize();
         this.pheromoneTimer = 0;
+        this.trail = new Trail(world);
+        world.add(this.trail);
     }
 
     async create() {
@@ -25,8 +28,9 @@ export class Ant {
         this.wallBounce();
         this.pheromoneTimer += delta;
         if (this.pheromoneTimer >= 0.2) {
-            const newPheromone = new Pheromone(this.world, this.facing, this.position);
-            this.world.add(newPheromone);
+            //const newPheromone = new Pheromone(this.world, this.facing, this.position);
+            //this.world.add(newPheromone);
+            this.trail.createPheromone(this.facing,this.position);
             this.pheromoneTimer = 0;
         }
 

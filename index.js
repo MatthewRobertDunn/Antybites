@@ -20,7 +20,7 @@ document.body.appendChild(stats.domElement);
 
 const world = new World(scene, new THREE.Vector2(camera.left, camera.top), new THREE.Vector2(camera.right, camera.bottom));
 
-for (let i = 0; i < 60; i++) {
+for (let i = 0; i < 120; i++) {
     let facing = new THREE.Vector2(Math.random() - 0.5, Math.random() - 0.5);
     world.add(new Ant(world, facing));
 }
@@ -35,6 +35,7 @@ const animate = function (now) {
     world.tick(delta);
     renderer.render(scene, camera);
     stats.end();
+    //console.log(world.entities.length);
 };
 
 requestAnimationFrame(animate);

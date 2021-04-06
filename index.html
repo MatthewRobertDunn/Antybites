@@ -1,14 +1,44 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>My first three.js app</title>
-		<style>
-			body { margin: 0; }
-		</style>
-	</head>
-	<body>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.min.js"></script>
-		<script type="module" src="index.js"></script>
-	</body>
+
+<head>
+	<meta charset="utf-8">
+	<title>My first three.js app</title>
+	<style>
+		body {
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<script id="vertexShader" type="x-shader/x-vertex">
+			uniform float time;
+			attribute vec3 instanceColor;
+			varying vec3 vInstanceColor;
+			varying vec2 texcoord;
+			void main()	{
+				vInstanceColor = instanceColor;
+				texcoord = uv;
+				vec4 mvPosition = instanceMatrix * vec4( position, 1.0 );
+				vec4 modelViewPosition = modelViewMatrix * mvPosition;
+				gl_Position = projectionMatrix * modelViewPosition;
+			}
+		</script>
+
+	<script id="fragmentShader" type="x-shader/x-fragment">
+			uniform float time;
+			varying vec3 vInstanceColor; 
+			varying vec2 texcoord;
+			void main() {
+				float j = sin(texcoord.x * 3.14);
+				float k = sin(texcoord.y * 3.14);
+				gl_FragColor = vec4(vInstanceColor, j * k * 0.2 );
+			}
+		</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.min.js"></script>
+	<script type="module" src="index.js"></script>
+</body>
+
 </html>
