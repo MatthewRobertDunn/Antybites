@@ -1,22 +1,25 @@
 import { Pheromone } from './pheromone.js'
+import { loadTexture, load } from './loader.js'
+
 const uniforms = {
     time: { type: "f", value: 0.0 },
 };
 
 const geometry = new THREE.PlaneGeometry(2, 2, 1);
-//const material = new THREE.MeshBasicMaterial({ color: 0xaaaa00 });
-
-const material = new THREE.ShaderMaterial({
+/*
+let material = new THREE.ShaderMaterial({
     transparent: true,
     blending: THREE.NormalBlending,
     uniforms: uniforms,
     vertexShader: document.getElementById('vertexShader').textContent,
     fragmentShader: document.getElementById('fragmentShader').textContent
-});
+}); */
 
+let texture = null;
 
 //Class of trailLength pheromones rendered using a single instanced mesh
 export class Trail {
+
     constructor(world) {
         this.trailLength = 80;
         this.count = 0;
@@ -24,13 +27,22 @@ export class Trail {
         this.dummy.updateMatrix();
         this.pheremones = [];
         this.world = world;
-        this.mesh = new THREE.InstancedMesh(geometry, material, this.trailLength);
-        this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
         this.trailColor = new THREE.Color(Math.random() * 0xaaaaaa);
     }
 
     async create() {
-        console.log("Trail created");
+
+        const material = await load("trailMaterial",async function(){
+            const texture = await loadTexture('./res/trail.png');
+            return  new THREE.MeshBasicMaterial({
+                transparent: true,
+                blending: THREE.NormalBlending,
+                map: texture,
+            });
+        });
+
+        this.mesh = new THREE.InstancedMesh(geometry, material, this.trailLength);
+        this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     }
 
     tick(delta) {

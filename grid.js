@@ -45,14 +45,18 @@ export class Grid {
         arrayRemove(cell, entity);
     }
 
-    getInRange(position, range) {
+    getInRange(position, range, type = null) {
         let index = this.getIndexFor(position);
         let results = [];
 
         for (let c of surroundingSquares) {
             let newIndex = index.clone().add(c);
-            let newItems = this.getCellAt(newIndex)
-                .filter(entity => entity.position.distanceTo(position) <= range);
+            
+            let cell = this.getCellAt(newIndex);
+            let newItems = cell.filter(entity => entity.position.distanceTo(position) <= range);
+            if(type != null){
+                newItems = newItems.filter(entity => entity instanceof type);
+            }
             results.push(...newItems);
         }
 

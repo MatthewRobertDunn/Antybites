@@ -1,5 +1,5 @@
 import { loadGtlf } from './loader.js'
-//import { Pheromone } from './pheromone.js';
+import { Pheromone } from './pheromone.js';
 import {Trail} from './trail.js';
 
 const zero = new THREE.Vector2(0, 0);
@@ -36,11 +36,13 @@ export class Ant {
 
         let sensorSpot = this.position.clone().add(this.facing.clone().multiplyScalar(4.0));
 
-        let pheromones = this.world.grid.getInRange(sensorSpot, 2.0);
+        let pheromones = this.world.grid.getInRange(sensorSpot, 2.0, Pheromone);
         if (pheromones.length > 0) {
             let p = pheromones[Math.floor(Math.random() * pheromones.length)];
-            //this.facing = p.position.clone().add(p.facing).sub(this.position).normalize();
-            this.facing = p.position.clone().sub(this.position).normalize();
+            //let stuff = p.facing.clone().multiplyScalar(0.5);
+            //this.facing = p.position.clone().add(stuff).sub(this.position).normalize();
+            //this.facing = p.position.clone().sub(this.position).normalize();
+            this.facing = p.facing;
         }
 
         this.mesh.position.set(this.position.x, this.position.y, 0);
