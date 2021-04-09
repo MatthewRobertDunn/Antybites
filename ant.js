@@ -10,14 +10,16 @@ export class Ant {
         this.facing = facing;
         this.facing.normalize();
         this.pheromoneTimer = 0;
-        this.trail = new Trail(world);
+        this.color = new THREE.Color(Math.random() * 0xaaaaaa);
+        this.trail = new Trail(world, this.color);
         world.add(this.trail);
     }
 
     async create() {
-        var mesh = await loadGtlf("./res/ant.glb");
-        mesh.scale.set(0.2, 0.2, 0.2);
-        this.mesh = mesh;
+        //var mesh = await loadGtlf("./res/ant.glb");
+        //mesh.scale.set(0.2, 0.2, 0.2);
+        //this.mesh = mesh;
+        this.mesh = this.createMesh();
         return;
     }
 
@@ -41,8 +43,8 @@ export class Ant {
             let p = pheromones[Math.floor(Math.random() * pheromones.length)];
             //let stuff = p.facing.clone().multiplyScalar(0.5);
             //this.facing = p.position.clone().add(stuff).sub(this.position).normalize();
-            //this.facing = p.position.clone().sub(this.position).normalize();
-            this.facing = p.facing;
+            this.facing = p.position.clone().sub(this.position).normalize();
+            //this.facing = p.facing;
         }
 
         this.mesh.position.set(this.position.x, this.position.y, 0);
@@ -75,7 +77,7 @@ export class Ant {
 
     createMesh() {
         const geometry = new THREE.PlaneGeometry(0.5, 1.5, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const material = new THREE.MeshBasicMaterial({ color: 0x0 });
         return new THREE.Mesh(geometry, material)
     }
 

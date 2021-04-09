@@ -5,7 +5,7 @@ const uniforms = {
     time: { type: "f", value: 0.0 },
 };
 
-const geometry = new THREE.PlaneGeometry(2, 2, 1);
+const geometry = new THREE.PlaneGeometry(1, 2.5, 1);
 /*
 let material = new THREE.ShaderMaterial({
     transparent: true,
@@ -20,29 +20,37 @@ let texture = null;
 //Class of trailLength pheromones rendered using a single instanced mesh
 export class Trail {
 
-    constructor(world) {
+    constructor(world, color) {
         this.trailLength = 80;
         this.count = 0;
         this.dummy = new THREE.Object3D();  //use a dummy object to calculate the world transform matrix
         this.dummy.updateMatrix();
         this.pheremones = [];
         this.world = world;
-        this.trailColor = new THREE.Color(Math.random() * 0xaaaaaa);
+        this.color = color;
     }
 
     async create() {
 
-        const material = await load("trailMaterial",async function(){
+        const material = await load("trailMaterial", async function () {
             const texture = await loadTexture('./res/trail.png');
-            return  new THREE.MeshBasicMaterial({
+            uniforms.texture1 =  { type: "t", value: texture };
+            return new THREE.ShaderMaterial({
                 transparent: true,
-                blending: THREE.NormalBlending,
-                map: texture,
-            });
+                //blending: THREE.MultiplyBlending,
+                uniforms: uniforms,
+                vertexShader: document.getElementById('vertexShader').textContent,
+                fragmentShader: document.getElementById('fragmentShader').textContent
+            })
         });
 
         this.mesh = new THREE.InstancedMesh(geometry, material, this.trailLength);
         this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+
+        for (let i = 0; i < this.trailLength; i++) {
+            this.mesh.setColorAt(i, this.color);
+        }
+        this.mesh.instanceColor.needsUpdate = true;
     }
 
     tick(delta) {
@@ -62,11 +70,7 @@ export class Trail {
         matrix.setPosition(position.x, position.y, -1.0); //translate transform
 
         this.mesh.setMatrixAt(this.count, matrix);
-        this.mesh.setColorAt(this.count, this.trailColor);
         this.mesh.instanceMatrix.needsUpdate = true;
-        this.mesh.instanceColor.needsUpdate = true;
-
-
         const newPheromone = new Pheromone(this.world, facing, position, () => this._deletePheromone(this.count));
         this.world.add(newPheromone);
 

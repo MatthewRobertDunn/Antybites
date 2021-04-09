@@ -20,7 +20,7 @@ document.body.appendChild(stats.domElement);
 
 const world = new World(scene, new THREE.Vector2(camera.left, camera.top), new THREE.Vector2(camera.right, camera.bottom));
 
-for (let i = 0; i < 60; i++) {
+for (let i = 0; i < 240; i++) {
     let facing = new THREE.Vector2(Math.random() - 0.5, Math.random() - 0.5);
     world.add(new Ant(world, facing));
 }
