@@ -14,14 +14,16 @@
 <body>
 	<script id="vertexShader" type="x-shader/x-vertex">
 			uniform float time;
-			//attribute vec3 instanceColor;
+			attribute float created;
 			varying vec3 vInstanceColor;
 			varying vec2 vUv;
+			varying float vCreated;
 			void main()	{
 				vInstanceColor = instanceColor;
 				vUv = uv;
 				vec4 mvPosition = instanceMatrix * vec4( position, 1.0 );
 				vec4 modelViewPosition = modelViewMatrix * mvPosition;
+				vCreated = created;
 				gl_Position = projectionMatrix * modelViewPosition;
 			}
 		</script>
@@ -31,12 +33,11 @@
 			uniform sampler2D texture1;
 			varying vec3 vInstanceColor; 
 			varying vec2 vUv;
+			varying float vCreated;
 			void main() {
-				//float j = sin(texcoord.x * 3.14);
-				//float k = sin(texcoord.y * 3.14);
-				//float a = j * k;
 				vec4 textureColor = texture2D(texture1, vUv);
-				gl_FragColor = vec4(vInstanceColor, textureColor.w);
+				float age = 0.7 / (time - vCreated);
+				gl_FragColor = vec4(vInstanceColor, textureColor.w * age);
 			}
 		</script>
 

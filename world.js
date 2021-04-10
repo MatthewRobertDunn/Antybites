@@ -13,6 +13,7 @@ export class World {
         this.deletedEntities = [];
         this.entities = [];
         this.ticklessEntities = [];
+        this.gameTime = 0.0;
     }
 
     add(entity) {
@@ -37,12 +38,13 @@ export class World {
         this._deleteEntities();
         this._tickEntities(delta);
         this._createEntities();
+        this.gameTime += delta;
     }
 
     _tickEntities(delta) {
         for (let entity of this.entities) {
             if (entity.tick != null) {
-                entity.tick(0.016);
+                entity.tick(delta, this.gameTime);
             }
 
             if (entity.facing != null && entity.mesh != null && entity.isStatic != true) {

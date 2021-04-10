@@ -5,15 +5,7 @@ const uniforms = {
     time: { type: "f", value: 0.0 },
 };
 
-const geometry = new THREE.PlaneGeometry(1, 2.5, 1);
-/*
-let material = new THREE.ShaderMaterial({
-    transparent: true,
-    blending: THREE.NormalBlending,
-    uniforms: uniforms,
-    vertexShader: document.getElementById('vertexShader').textContent,
-    fragmentShader: document.getElementById('fragmentShader').textContent
-}); */
+const geometry =  new THREE.PlaneGeometry(1, 2.5, 1);
 
 let texture = null;
 
@@ -28,10 +20,11 @@ export class Trail {
         this.pheremones = [];
         this.world = world;
         this.color = color;
+        this.gameTime = 0.0;
+        this.trailCreateds = new Float32Array(this.trailLength);
     }
 
     async create() {
-
         const material = await load("trailMaterial", async function () {
             const texture = await loadTexture('./res/trail.png');
             uniforms.texture1 =  { type: "t", value: texture };
@@ -44,7 +37,12 @@ export class Trail {
             })
         });
 
-        this.mesh = new THREE.InstancedMesh(geometry, material, this.trailLength);
+        //this.instanceGeometry = new THREE.InstancedBufferGeometry().copy(this.geometry);
+        this.instanceGeometry = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(1, 2.5, 1));
+        this.trailsAttribute = new THREE.InstancedBufferAttribute(this.trailCreateds, 1);
+        this.instanceGeometry.setAttribute("created", this.trailsAttribute);
+
+        this.mesh = new THREE.InstancedMesh(this.instanceGeometry, material, this.trailLength);
         this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 
         for (let i = 0; i < this.trailLength; i++) {
@@ -53,8 +51,9 @@ export class Trail {
         this.mesh.instanceColor.needsUpdate = true;
     }
 
-    tick(delta) {
-        uniforms.time.value += delta / 100.0;
+    tick(delta, gameTime) {
+        this.gameTime = gameTime;
+        uniforms.time.value = gameTime;
     }
 
     createPheromone(facing, position) {
@@ -68,9 +67,10 @@ export class Trail {
         matrix.makeRotationFromQuaternion(qrot);
 
         matrix.setPosition(position.x, position.y, -1.0); //translate transform
-
+        this.trailCreateds[this.count] = this.gameTime;
         this.mesh.setMatrixAt(this.count, matrix);
         this.mesh.instanceMatrix.needsUpdate = true;
+        this.trailsAttribute.needsUpdate = true;
         const newPheromone = new Pheromone(this.world, facing, position, () => this._deletePheromone(this.count));
         this.world.add(newPheromone);
 
