@@ -16,10 +16,10 @@ export class Ant {
     }
 
     async create() {
-        //var mesh = await loadGtlf("./res/ant.glb");
-        //mesh.scale.set(0.2, 0.2, 0.2);
-        //this.mesh = mesh;
-        this.mesh = this.createMesh();
+        var mesh = await loadGtlf("./res/fish.glb");
+        mesh.scale.set(1.0, 1.0, 1.0);
+        this.mesh = mesh;
+        //this.mesh = this.createMesh();
         return;
     }
 

@@ -27,6 +27,7 @@ export class Grid {
         this._checkBounds(entity);
 
         let index = this.getIndexFor(entity.position);
+        entity.spatialIndex = index;
 
         if (this.grid[index.x] == null) {
             this.grid[index.x] = [];
@@ -40,9 +41,8 @@ export class Grid {
 
     remove(entity) {
         this._checkBounds(entity);
-        let index = this.getIndexFor(entity.position);
-        let cell = this.getCellAt(index);
-        arrayRemove(cell, entity);
+        let cell = this.getCellAt(entity.spatialIndex);
+        let removed = arrayRemove(cell, entity);
     }
 
     getInRange(position, range, type = null) {
@@ -86,6 +86,23 @@ export class Grid {
         }
 
         return this.grid[x][y];
+    }
+
+    print(){
+        let count = 0;
+        for (let i=0;i<this.grid.length;i++){
+            if(this.grid[i] == null){
+                continue;
+            }
+            for(let k=0;k<this.grid[i].length;k++)
+            {
+                if(this.grid[i][k] == null){
+                    continue;
+                }
+                count += this.grid[i][k].length;
+            }
+       }
+        console.log(`items in spatial grid ${count}`);
     }
 
 
