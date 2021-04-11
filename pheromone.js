@@ -13,29 +13,19 @@ export class Pheromone {
     }
 
     async create(){
-        /*this.mesh = this.createMesh();
-        this.mesh.position.set(this.position.x, this.position.y, -2.0);
-        var a = new THREE.Vector3(0, 1, 0);
-        var qrot = new THREE.Quaternion();
-        qrot.setFromUnitVectors(a, new THREE.Vector3(this.facing.x, this.facing.y, 0));
-        this.mesh.rotation.setFromQuaternion(qrot);
-        this.mesh.rotation.x = 0;
-        this.mesh.rotation.y = 0;
-        this.mesh.matrixAutoUpdate = false;
-        this.mesh.updateMatrix(); 
-        return; */
     }
 
     delete() {
-
     }
 
+    /*
     tick(delta){
         this.age -= delta;
         if(this.age <= 0){
             this.world.remove(this);
         }
     } 
+    */
 
     createMesh(){
         const mesh =  new THREE.Mesh(geometry, material);

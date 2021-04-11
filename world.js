@@ -34,11 +34,20 @@ export class World {
         this.deletedEntities.push(entity);
     }
 
+    debugTimer = 1.0;
     tick(delta) {
         this._deleteEntities();
         this._tickEntities(delta);
         this._createEntities();
         this.gameTime += delta;
+        this.debugTimer -= delta;
+        if(this.debugTimer < 0){
+            console.log(`deleted ${this.deletedEntities.length}`);
+            console.log(`created ${this.newEntities.length}`);
+            console.log(`entities ${this.entities.length}`);
+            console.log(`static entities ${this.ticklessEntities.length}`);
+            this.debugTimer = 10.0;
+        }
     }
 
     _tickEntities(delta) {
@@ -85,7 +94,7 @@ export class World {
         }
         this.deletedEntities.length = 0;
         
-        while(this.ticklessEntities.length > 3300){
+        while(this.ticklessEntities.length > 24100){
             this._deleteEntity(this.ticklessEntities[0]);
             this.ticklessEntities.shift();
         } 
