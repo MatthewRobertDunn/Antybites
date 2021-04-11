@@ -5,15 +5,13 @@ const uniforms = {
     time: { type: "f", value: 0.0 },
 };
 
-const geometry =  new THREE.PlaneGeometry(1, 2.5, 1);
-
 let texture = null;
 
 //Class of trailLength pheromones rendered using a single instanced mesh
 export class Trail {
 
     constructor(world, color) {
-        this.trailLength = 80;
+        this.trailLength = 60;
         this.count = 0;
         this.dummy = new THREE.Object3D();  //use a dummy object to calculate the world transform matrix
         this.dummy.updateMatrix();
@@ -30,7 +28,6 @@ export class Trail {
             uniforms.texture1 =  { type: "t", value: texture };
             return new THREE.ShaderMaterial({
                 transparent: true,
-                //blending: THREE.MultiplyBlending,
                 uniforms: uniforms,
                 vertexShader: document.getElementById('vertexShader').textContent,
                 fragmentShader: document.getElementById('fragmentShader').textContent
@@ -38,7 +35,7 @@ export class Trail {
         });
 
         //this.instanceGeometry = new THREE.InstancedBufferGeometry().copy(this.geometry);
-        this.instanceGeometry = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(1, 2.5, 1));
+        this.instanceGeometry = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(0.5, 0.5, 1));
         this.trailsAttribute = new THREE.InstancedBufferAttribute(this.trailCreateds, 1);
         this.instanceGeometry.setAttribute("created", this.trailsAttribute);
 

@@ -21,10 +21,14 @@
 			void main()	{
 				vInstanceColor = instanceColor;
 				vUv = uv;
-				vec4 mvPosition = instanceMatrix * vec4( position, 1.0 );
-				vec4 modelViewPosition = modelViewMatrix * mvPosition;
 				vCreated = created;
-				gl_Position = projectionMatrix * modelViewPosition;
+				float age = (time - created);
+				float size = min(4.0, 1.0 + age * 2.0 );
+
+				vec3 foo = position * size;
+				vec4 mvPosition = instanceMatrix * vec4( foo, 1.0 );
+				vec4 modelViewPosition = modelViewMatrix * mvPosition;
+				gl_Position = (projectionMatrix * modelViewPosition);
 			}
 		</script>
 
@@ -36,13 +40,16 @@
 			varying float vCreated;
 			void main() {
 				vec4 textureColor = texture2D(texture1, vUv);
-				float age = 0.7 / (time - vCreated);
+				float age = 2.0 / (time - vCreated);
+				age = age * age;
 				gl_FragColor = vec4(vInstanceColor, textureColor.w * age);
 			}
 		</script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r127/three.min.js"></script>
+	<script src="./controls.js"></script>
 	<script type="module" src="index.js"></script>
+
 </body>
 
 </html>

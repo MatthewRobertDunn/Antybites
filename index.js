@@ -17,6 +17,8 @@ scene.add(light);
 scene.background = new THREE.Color(0xffffff);
 const stats = createStats();
 document.body.appendChild(stats.domElement);
+var controls = new THREE.PanControls( camera, renderer.domElement );
+
 
 const world = new World(scene, new THREE.Vector2(camera.left, camera.top), new THREE.Vector2(camera.right, camera.bottom));
 
@@ -30,8 +32,11 @@ const animate = function (now) {
     requestAnimationFrame(animate);
     stats.begin();
     now = now * 0.001;
-    const delta = now - then;
+    let delta = now - then;
     then = now;
+    if(delta > 0.016){
+        delta = 0.016;
+    }
     world.tick(delta);
     renderer.render(scene, camera);
     stats.end();
