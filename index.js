@@ -1,7 +1,6 @@
 import { World } from "./world.js"
 import { Ant } from "./ant.js";
 import { Stats } from "./stats.js";
-
 const scene = new THREE.Scene();
 const camera = new THREE.OrthographicCamera(-100, 100, 100, -100, -100, 100);
 const renderer = new THREE.WebGLRenderer();

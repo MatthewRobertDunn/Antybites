@@ -12,7 +12,7 @@ export class World {
         this.newEntities = [];
         this.deletedEntities = [];
         this.entities = [];
-        this.ticklessEntities = [];
+        this.staticEntities = [];
         this.gameTime = 0.0;
     }
 
@@ -57,8 +57,8 @@ export class World {
             if (entity.tick != null) {
                 entity.tick(delta, this.gameTime);
             }
-
-            if (entity.facing != null && entity.mesh != null && entity.isStatic != true) {
+            //updates mesh to point the way we are facing
+            if (entity.facing != null && entity.mesh != null) {
                 var a = new THREE.Vector3(0, 1, 0);
                 var qrot = new THREE.Quaternion();
                 qrot.setFromUnitVectors(a, new THREE.Vector3(entity.facing.x, entity.facing.y, 0));
@@ -83,7 +83,7 @@ export class World {
             if (entity.tick != null) {
                 this.entities.push(entity);
             } else {
-                this.ticklessEntities.push(entity);
+                this.staticEntities.push(entity);
             }
         }
 
@@ -96,9 +96,9 @@ export class World {
         }
         this.deletedEntities.length = 0;
         
-        while(this.ticklessEntities.length > 24100){
-            this._deleteEntity(this.ticklessEntities[0]);
-            this.ticklessEntities.shift();
+        while(this.staticEntities.length > 24100){
+            this._deleteEntity(this.staticEntities[0]);
+            this.staticEntities.shift();
         } 
     }
 

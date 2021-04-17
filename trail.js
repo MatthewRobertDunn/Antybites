@@ -19,7 +19,7 @@ export class Trail {
         this.world = world;
         this.color = color;
         this.gameTime = 0.0;
-        this.trailCreateds = new Float32Array(this.trailLength);
+        this.trailsCreatedTime = new Float32Array(this.trailLength);
     }
 
     async create() {
@@ -35,8 +35,8 @@ export class Trail {
         });
 
         //this.instanceGeometry = new THREE.InstancedBufferGeometry().copy(this.geometry);
-        this.instanceGeometry = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(0.5, 0.5, 1));
-        this.trailsAttribute = new THREE.InstancedBufferAttribute(this.trailCreateds, 1);
+        this.instanceGeometry = new THREE.InstancedBufferGeometry().copy(new THREE.PlaneGeometry(0.5, 0.5));
+        this.trailsAttribute = new THREE.InstancedBufferAttribute(this.trailsCreatedTime, 1);
         this.instanceGeometry.setAttribute("created", this.trailsAttribute);
 
         this.mesh = new THREE.InstancedMesh(this.instanceGeometry, material, this.trailLength);
@@ -62,15 +62,19 @@ export class Trail {
         var qrot = new THREE.Quaternion();
         qrot.setFromUnitVectors(a, new THREE.Vector3(facing.x, facing.y, 0));
         matrix.makeRotationFromQuaternion(qrot);
+        //moves them behind the fishies
+        matrix.setPosition(position.x, position.y, -1.0);
+       
 
-        matrix.setPosition(position.x, position.y, -1.0); //translate transform
-        this.trailCreateds[this.count] = this.gameTime;
         this.mesh.setMatrixAt(this.count, matrix);
+        
+        this.trailsCreatedTime[this.count] = this.gameTime;
+        
+       
         this.mesh.instanceMatrix.needsUpdate = true;
         this.trailsAttribute.needsUpdate = true;
         const newPheromone = new Pheromone(this.world, facing, position, () => this._deletePheromone(this.count));
         this.world.add(newPheromone);
-
 
         this.count += 1;
         this.count = this.count % this.trailLength;

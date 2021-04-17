@@ -23,7 +23,6 @@ export class Ant {
         return;
     }
 
-
     tick(delta) {
         this.position.add(this.facing.clone().multiplyScalar(delta * 10.0));
         this.facing.rotateAround(zero, (Math.random() - 0.5) * 0.3).normalize();
@@ -39,7 +38,7 @@ export class Ant {
         let sensorSpot = this.position.clone().add(this.facing.clone().multiplyScalar(4.0));
 
         let pheromones = this.world.grid.getInRange(sensorSpot, 2.0, Pheromone);
-        if (pheromones.length > 0) {
+        if (pheromones.length > 0 && pheromones.length < 100) {
             let p = pheromones[Math.floor(Math.random() * pheromones.length)];
             let stuff = p.facing.clone().multiplyScalar(0.3);
             this.facing = p.position.clone().add(stuff).sub(this.position).normalize();
